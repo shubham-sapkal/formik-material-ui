@@ -32,10 +32,6 @@ const validationSchema = yup.object({
     username: yup
         .string('Enter Your Username')
         .required('Username is required'),
-    password: yup
-        .string('Enter your password')
-        .min(8, 'Password should be of minimum 8 characters length')
-        .required('password is required'),
     address: yup
         .string('Enter your address')
         .required('Address is required'),
@@ -90,7 +86,6 @@ const App = () => {
                     id="address"
                     name="address"
                     minRows={2}
-                    label="address"
                     value={formik.values.address}
                     onChange={formik.handleChange} 
                     error={ formik.touched.address && Boolean(formik.errors.address) } />
@@ -118,9 +113,9 @@ const App = () => {
                 </FormControl>
                 <p> { formik.touched.country && <span className="span-error">{formik.errors.country}</span> } </p>
 
-                
-                <FormControl fullWidth component="fieldset" margin="normal">
                 <InputLabel htmlFor="gender">Gender</InputLabel>
+                <FormControl fullWidth component="fieldset" margin="normal">
+                
                     <RadioGroup 
                         id="gender"
                         name="gender"
@@ -139,13 +134,13 @@ const App = () => {
                 <p> { formik.touched.gender && formik.errors.gender && <span className="span-error">Please Select Your Gender</span> } </p> 
 
 
-                   
+                    <InputLabel htmlFor="intrest">Interests</InputLabel>
                     <FormControl
                         variant="outlined" 
                         fullWidth 
                         margin="normal"
                         error={ formik.touched.intrest &&  formik.values.intrest.length === 0 } >
-                        <InputLabel htmlFor="intrest">Interests</InputLabel>
+                        
                         <Select 
                             id="intrest"
                             name="intrest" 
