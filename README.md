@@ -1,70 +1,216 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Formik Material UI
 
-## Available Scripts
 
-In the project directory, you can run:
+# What is Formik
 
-### `npm start`
+Formik is a popular open-source library for building and processing form data in React applications. It provides many utility components and functions that make handling form data in a React application more enjoyable.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Traditional form-management method in React requires creating a universal or single useState() hook for each form field, adding an event listener to each field, and triggering a method to update them individually.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+// Infuriating traditional react form management method
 
-### `npm test`
+import { useState } from "react";
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+function InputForm() {
+  const [input1, setInput1] = useState("");
+  const [input2, setInput2] = useState("");
 
-### `npm run build`
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "input1") {
+      setInput1(value);
+    } else if (name === "input2") {
+      setInput2(value);
+    }
+  };
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  const handleSubmit = (event) => {
+   // . . .
+  };
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="input1" value={input1} onChange={handleInputChange} />
+      <input name="input2" value={input2} onChange={handleInputChange} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export default InputForm;
+```
 
-### `npm run eject`
+On the other hand, Formik handles all of these tedious operations for us under the hood. We only need to import its provided components – our form data are readily available.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+In addition to helping us handle form data, Formik provides some other mechanisms that let us validate form fields, track form submission state, and handle errors.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+<Formik
+  onSubmit={(formData) => {
+    console.log(formData);
+  }}
+>
+  {({ isSubmitting }) => (
+    <Form>
+      <Field type="text" name="fullname" placeholder="Enter fullname" />
+      <Field type="email" name="email" placeholder="Enter address" />
+      <button type="submit">Submit</button>
+    </Form>
+  )}
+</Formik>;
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Another Example using useFormik() Hook
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+import React from 'react';
+import { useFormik } from 'formik';
 
-## Learn More
+const SignupForm = () => {
+  // Note that we have to initialize ALL of fields with values. These
+  // could come from props, but since we don’t want to prefill this form,
+  // we just use an empty string. If we don’t do this, React will yell
+  // at us.
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+    },
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
+  return (
+    <form onSubmit={formik.handleSubmit}>
+      <label htmlFor="firstName">First Name</label>
+      <input
+        id="firstName"
+        name="firstName"
+        type="text"
+        onChange={formik.handleChange}
+        value={formik.values.firstName}
+      />
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+      <label htmlFor="lastName">Last Name</label>
+      <input
+        id="lastName"
+        name="lastName"
+        type="text"
+        onChange={formik.handleChange}
+        value={formik.values.lastName}
+      />
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+      <label htmlFor="email">Email Address</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        onChange={formik.handleChange}
+        value={formik.values.email}
+      />
 
-### Code Splitting
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Formik With Material UI
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Formik can be easily used/integrated with Material UI, with just passing a few formik props to the respective Material UI Component props. Refer to the example below to get started.
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
-### Advanced Configuration
+const validationSchema = yup.object({
+  email: yup
+    .string('Enter your email')
+    .email('Enter a valid email')
+    .required('Email is required'),
+  password: yup
+    .string('Enter your password')
+    .min(8, 'Password should be of minimum 8 characters length')
+    .required('Password is required'),
+});
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+const WithMaterialUI = () => {
+  const formik = useFormik({
+    initialValues: {
+      email: 'foobar@example.com',
+      password: 'foobar',
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
-### Deployment
+  return (
+    <div>
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          id="email"
+          name="email"
+          label="Email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
+        />
+        <TextField
+          fullWidth
+          id="password"
+          name="password"
+          label="Password"
+          type="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
+        />
+        <Button color="primary" variant="contained" fullWidth type="submit">
+          Submit
+        </Button>
+      </form>
+    </div>
+  );
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+ReactDOM.render(<WithMaterialUI />, document.getElementById('root'));
+```
 
-### `npm run build` fails to minify
+# installation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+formik - for form
+```
+npm install formik
+```
+
+yup - for validation
+```
+npm install yup
+```
+
+material-ui - for desigining
+```
+npm install @material-ui/core
+```
+
+
+
+# API Reference
+
+Formik : https://formik.org/docs/overview
+
+Material UI v4: https://v4.mui.com/getting-started/installation/

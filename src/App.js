@@ -1,10 +1,12 @@
 import React from "react";
 
+// importing formik hook and yup validation schema 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import './index.css';
 
+// importing Material UI components
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
@@ -27,7 +29,7 @@ const intrest = [
     { value: 'datascience', label: 'Data Science'}
 ]
 
-
+// Defining validation schemas
 const validationSchema = yup.object({
     username: yup
         .string('Enter Your Username')
@@ -66,6 +68,8 @@ const App = () => {
             <h1>Registration Form</h1>
 
             <form onSubmit={formik.handleSubmit} >
+
+                {/* Text Field for username  */}
                 <TextField 
                     id="username"
                     name="username"
@@ -81,6 +85,7 @@ const App = () => {
                 <br />
                 <br />
 
+                {/* Text Area Field for address  */}
                 <InputLabel htmlFor="address">Address</InputLabel>
                 <TextareaAutosize
                     id="address"
@@ -93,7 +98,7 @@ const App = () => {
                 <p>{ formik.touched.address && <span className="span-error"> {formik.errors.address} </span>  }</p>
             
                
-                
+                {/* FormControl and Select component for country  */}
                 <FormControl fullWidth >
                     <InputLabel htmlFor="country">Country</InputLabel>
                     <Select 
@@ -113,6 +118,7 @@ const App = () => {
                 </FormControl>
                 <p> { formik.touched.country && <span className="span-error">{formik.errors.country}</span> } </p>
 
+                {/* FormControl and RadioGroup components for Gender  */}
                 <InputLabel htmlFor="gender">Gender</InputLabel>
                 <FormControl fullWidth component="fieldset" margin="normal">
                 
@@ -133,7 +139,7 @@ const App = () => {
                 </FormControl>
                 <p> { formik.touched.gender && formik.errors.gender && <span className="span-error">Please Select Your Gender</span> } </p> 
 
-
+                    {/* Form Control and Multi Select for Interes and Hobbies  */}
                     <InputLabel htmlFor="intrest">Interests</InputLabel>
                     <FormControl
                         variant="outlined" 
@@ -157,8 +163,7 @@ const App = () => {
                                 ) ) }
                         </Select>
                     </FormControl>
-              
-                <p> { formik.touched.intrest &&  formik.values.intrest.length === 0 && <span className="span-error">Please Select Your Interest</span> } </p>
+                    <p> { formik.touched.intrest &&  formik.values.intrest.length === 0 && <span className="span-error">Please Select Your Interest</span> } </p>
 
                 <Button color="primary" variant="contained" type="submit">
                     Submit
