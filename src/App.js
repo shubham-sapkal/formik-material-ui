@@ -7,12 +7,10 @@ import './index.css';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { FormControl, InputLabel, MenuItem, TextareaAutosize, Select, RadioGroup, FormControlLabel, Radio, Checkbox } from "@material-ui/core";
+
+import { FormControl, InputLabel,  MenuItem, TextareaAutosize, Select, RadioGroup, FormControlLabel, Radio, Checkbox } from "@material-ui/core";
 
 import Card from './components/Card';
-
-// import Button from '@mui/material/Button';
-// import TextField from '@mui/material/TextField';
 
 
 const countries = [
@@ -37,8 +35,17 @@ const validationSchema = yup.object({
     password: yup
         .string('Enter your password')
         .min(8, 'Password should be of minimum 8 characters length')
-        .required('password is required')
-});
+        .required('password is required'),
+    address: yup
+        .string('Enter your address')
+        .required('Address is required'),
+    country: yup
+        .string('Enter your address!')
+        .required('Please Select Your Country!'),
+    gender: yup
+        .string('Select Your Gender!')
+        .required('Pleae Select Your Gender!'),
+    });
 
 
 const App = () => {
@@ -51,6 +58,7 @@ const App = () => {
             gender: '',
             intrest: [],
         },
+        validationSchema: validationSchema,
         onSubmit: (values) => {
             console.log("Form Submitted!");
             console.log(JSON.stringify(values));
@@ -71,7 +79,8 @@ const App = () => {
                     value={formik.values.username}
                     onChange={formik.handleChange}
                     error={ formik.touched.username && Boolean(formik.errors.username) } 
-                    helperText={ formik.touched.username && formik.errors.username }/>
+                    helperText={ formik.touched.username && formik.errors.username }
+                    />
             
                 <br />
                 <br />
@@ -80,22 +89,26 @@ const App = () => {
                 <TextareaAutosize
                     id="address"
                     name="address"
-                    minRows={3}
+                    minRows={2}
                     label="address"
                     value={formik.values.address}
-                    onChange={formik.handleChange} />
+                    onChange={formik.handleChange} 
+                    error={ formik.touched.address && Boolean(formik.errors.address) } />
                 
-                <br />
-                <br />
-
-                <FormControl  fullWidth margin="normal">
+                <p>{ formik.touched.address && <span className="span-error"> {formik.errors.address} </span>  }</p>
+            
+               
+                
+                <FormControl fullWidth >
                     <InputLabel htmlFor="country">Country</InputLabel>
                     <Select 
                         id="country"
                         name="country"
+                        label="Country"
                         variant="outlined"
                         value={formik.values.country}
-                        onChange={formik.handleChange} >
+                        onChange={formik.handleChange}
+                        error={ formik.touched.country && Boolean(formik.errors.country) }>
                             {countries.map( (option) => (
                                 <MenuItem key={option.value} value={option.value} >
                                     {option.label}
@@ -103,8 +116,11 @@ const App = () => {
                             ) )}
                     </Select>
                 </FormControl>
+                <p> { formik.touched.country && <span className="span-error">{formik.errors.country}</span> } </p>
 
+                
                 <FormControl fullWidth component="fieldset" margin="normal">
+                <InputLabel htmlFor="gender">Gender</InputLabel>
                     <RadioGroup 
                         id="gender"
                         name="gender"
@@ -120,24 +136,34 @@ const App = () => {
                                 label="Female" />
                     </RadioGroup>
                 </FormControl>
+                <p> { formik.touched.gender && formik.errors.gender && <span className="span-error">Please Select Your Gender</span> } </p> 
 
-                <FormControl variant="outlined" fullWidth margin="normal">
-                    <InputLabel htmlFor="intrest">Interests</InputLabel>
-                    <Select 
-                        id="intrest"
-                        name="intrest"
-                        multiple
-                        value={formik.values.intrest}
-                        onChange={formik.handleChange}
-                        renderValue={ (selected) => selected.join(', ') } >
-                            { intrest.map( option => (
-                                <MenuItem key={option.value} value={option.value} >
-                                    <Checkbox checked={formik.values.intrest.includes(option.value)} />
-                                    {option.label}
-                                </MenuItem>
-                            ) ) }
-                    </Select>
-                </FormControl>
+
+                   
+                    <FormControl
+                        variant="outlined" 
+                        fullWidth 
+                        margin="normal"
+                        error={ formik.touched.intrest &&  formik.values.intrest.length === 0 } >
+                        <InputLabel htmlFor="intrest">Interests</InputLabel>
+                        <Select 
+                            id="intrest"
+                            name="intrest" 
+                            value={formik.values.intrest}
+                            multiple
+                            onChange={formik.handleChange}
+                            renderValue={ (selected) => selected.join(', ') } >
+
+                                { intrest.map( option => (
+                                    <MenuItem key={option.value} value={option.value} >
+                                        <Checkbox checked={formik.values.intrest.includes(option.value)} />
+                                        {option.label}
+                                    </MenuItem>
+                                ) ) }
+                        </Select>
+                    </FormControl>
+              
+                <p> { formik.touched.intrest &&  formik.values.intrest.length === 0 && <span className="span-error">Please Select Your Interest</span> } </p>
 
                 <Button color="primary" variant="contained" type="submit">
                     Submit
@@ -147,6 +173,11 @@ const App = () => {
         </Card>
 
     );
+
+    
+
+
+
 };
 
 export default App;

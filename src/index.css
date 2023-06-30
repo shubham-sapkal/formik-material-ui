@@ -4,3 +4,7 @@
     width: 50rem;
     max-width: 95%;
   }
+
+.span-error {
+  color: red;
+}
